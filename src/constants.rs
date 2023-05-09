@@ -13,3 +13,25 @@ pub const K: [u32; 64] = [
 pub const H: [u32; 8] = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
 ];
+
+pub type CVWords = [u32; 8];
+pub type CVBytes = [u8; 32]; // little-endian
+
+pub const IV: &CVWords = &[
+    0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19,
+];
+
+pub const MSG_PERMUTATION: [usize; 16] = [2, 6, 3, 10, 7, 0, 4, 13, 1, 11, 12, 5, 9, 14, 15, 8];
+
+pub const OUT_LEN: usize = 32;
+pub const KEY_LEN: usize = 32;
+pub const BLOCK_LEN: usize = 64;
+pub const CHUNK_LEN: usize = 1024;
+
+pub const CHUNK_START: u32 = 1 << 0;
+pub const CHUNK_END: u32 = 1 << 1;
+pub const PARENT: u32 = 1 << 2;
+pub const ROOT: u32 = 1 << 3;
+pub const KEYED_HASH: u32 = 1 << 4;
+pub const DERIVE_KEY_CONTEXT: u32 = 1 << 5;
+pub const DERIVE_KEY_MATERIAL: u32 = 1 << 6;

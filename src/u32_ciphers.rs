@@ -1,9 +1,19 @@
-use tfhe::{FheUint32};
+use tfhe::{
+    {FheUint32, ClientKey }, prelude::FheTryEncrypt,
+};
 
 pub struct U32InputCipher{
     inner: Vec<FheUint32>,
 }
-
+impl U32InputCipher{
+   pub fn encrypt(v: Vec<u32>, k: &ClientKey ) -> Self{
+        let e_vec = v
+        .into_iter()
+        .map(|i| FheUint32::try_encrypt(i, k).unwrap())
+        .collect::<Vec<FheUint32>>();
+        Self { inner: e_vec }
+    }
+}
 
 
 // interesting snippet from ChatGPT
