@@ -70,6 +70,18 @@ fn g(state: &mut [FheUint32; 16], a: usize, b: usize, c: usize, d: usize, mx: u3
     state[b] = rotate_right(state[b].clone() ^ state[c].clone(),7);
 }
 
+fn round(state: &mut [FheUint32; 16], m: &[u32; 16]) {
+    // Mix the columns.
+    g(state, 0, 4, 8, 12, m[0], m[1]);
+    g(state, 1, 5, 9, 13, m[2], m[3]);
+    g(state, 2, 6, 10, 14, m[4], m[5]);
+    g(state, 3, 7, 11, 15, m[6], m[7]);
+    // Mix the diagonals.
+    g(state, 0, 5, 10, 15, m[8], m[9]);
+    g(state, 1, 6, 11, 12, m[10], m[11]);
+    g(state, 2, 7, 8, 13, m[12], m[13]);
+    g(state, 3, 4, 9, 14, m[14], m[15]);
+}
 
 pub fn fhe_sha256(msg: &str) -> [FheUint32; 32]{
     todo!()
