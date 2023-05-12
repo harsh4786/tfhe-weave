@@ -4,7 +4,7 @@ use secp256k1::{Secp256k1, Message};
 mod constants;
 mod u32_ciphers;
 use u32_ciphers::{U32InputCipher};
-use constants::{IV,};
+use constants::{IV, MSG_PERMUTATION};
 use secp256k1::rand::rngs::OsRng;
 use u32_ciphers::string_to_u32_vector;
 use secp256k1::hashes::sha256;// use secp256k1::hashes::sha256;
@@ -83,7 +83,19 @@ fn round(state: &mut [FheUint32; 16], m: &[u32; 16]) {
     g(state, 3, 4, 9, 14, m[14], m[15]);
 }
 
-pub fn fhe_sha256(msg: &str) -> [FheUint32; 32]{
+pub fn fhe_blake3(msg: &str) -> [FheUint32; 32]{
     todo!()
 }
 
+// forming a new array of values that are modified from the original "m" array passed to the permute function
+// since there are 16 values in PERMUTATION array [2, 6, 3, 10, 7, 0, 4, 13, 1, 11, 12, 5, 9, 14, 15, 8]
+// the for loop starts at index 0 and the value from PERMUTATION array is "2" so it fetches the value that is 
+// present in the "m" array at index 2 and sets it to our permuted array which was initialized with [0, 0, 0, 0, 0, 0, 0, 0, 0, 0....upto 16 zeroes]
+// and returns the permuted array formed from the input "m" array but directed by the PERMUTATION array.
+fn permute(m: &mut [FheUint32; 16]) {
+    let mut permuted = [FheUint32::encrypt_trivial(0, client_key).unwrap().clone(); 16];
+    for i in 0..16 {
+        permuted[i] = m[MSG_PERMUTATION[i]];
+    }
+    *m = permuted;
+}

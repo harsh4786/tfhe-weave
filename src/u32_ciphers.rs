@@ -1,6 +1,7 @@
 use tfhe::{
-    {FheUint32, ClientKey }, prelude::FheTryEncrypt,
+    {FheUint32, ClientKey, FheUint8 }, prelude::FheTryEncrypt,
 };
+use crate::constants::{ BLOCK_LEN};
 
 pub struct U32InputCipher{
     inner: Vec<FheUint32>,
@@ -13,6 +14,15 @@ impl U32InputCipher{
         .collect::<Vec<FheUint32>>();
         Self { inner: e_vec }
     }
+}
+
+pub struct ChunkState {
+    chaining_value: [FheUint32; 8],
+    chunk_counter: u64,
+    block: [FheUint8; BLOCK_LEN],
+    block_len: u8,
+    blocks_compressed: u8,
+    flags: u32,
 }
 
 
